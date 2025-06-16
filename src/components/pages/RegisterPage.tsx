@@ -1,18 +1,19 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { useAuth } from '../../services/AuthContext.tsx';
+
+interface RegisterProps {
+  onRegisterSuccess: (token: string) => void;
+}
 
 const RECAPTCHA_SITE_KEY = '6Ld8g2IrAAAAAGWH_2KnqY6d4hBOuXHdy_OWB6ih';
 
-const LoginPage = () => {
+const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
+  const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const { login } = useAuth();
 
   useEffect(() => {
     document.body.style.backgroundColor = '#2C2D30';
@@ -21,42 +22,50 @@ const LoginPage = () => {
     };
   }, []);
 
-  const handleLogin = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (!captchaToken) {
       setError('Пожалуйста, подтвердите, что вы не робот.');
       return;
     }
 
     try {
-      const response = await axios.post('https://your-api.com/login', {
+      const response = await axios.post('https://your-api.com/register', {
+        login,
         email,
         password,
         captchaToken,
       });
-
-      const token = response.data.token;
-      login(token);
+      onRegisterSuccess(response.data.token);
       setError('');
-      navigate('/digest');
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || 'Ошибка входа');
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.message || 'Ошибка регистрации');
+      } else if (error instanceof Error) {
+        setError(error.message);
       } else {
-        setError('Неизвестная ошибка');
+        setError('Ошибка регистрации');
       }
     }
   };
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleLogin();
-      }}
-      className="max-w-md mx-auto mt-[15%] p-8 bg-[#3A3B3E] rounded-lg shadow-lg flex flex-col gap-4 text-white"
+      onSubmit={handleSubmit}
+      className="max-w-md mx-auto mt-[13%] p-8 bg-[#3A3B3E] rounded-lg shadow-lg flex flex-col gap-4 text-white"
       autoComplete="off"
     >
-      <h2 className="text-center text-xl font-semibold">Вход</h2>
+      <h2 className="text-center text-xl font-semibold">Регистрация</h2>
+
+      <input
+        type="text"
+        placeholder="Логин"
+        value={login}
+        onChange={(e) => setLogin(e.target.value)}
+        required
+        className="px-4 py-2 rounded-md bg-[#2C2D30] border border-[#555] text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+      />
 
       <input
         type="email"
@@ -76,7 +85,7 @@ const LoginPage = () => {
         className="px-4 py-2 rounded-md bg-[#2C2D30] border border-[#555] text-white focus:outline-none focus:ring-2 focus:ring-green-500"
       />
 
-      <div className="my-2 mt-4 ml-1">
+      <div className="my-2">
         <ReCAPTCHA
           sitekey={RECAPTCHA_SITE_KEY}
           onChange={(token) => setCaptchaToken(token)}
@@ -86,14 +95,16 @@ const LoginPage = () => {
 
       <button
         type="submit"
-        className="px-4 py-2 mt-1 bg-green-600 hover:bg-green-700 text-white rounded-md transition duration-300"
+        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition duration-300"
       >
-        Войти
+        Зарегистрироваться
       </button>
 
-      {error && <p className="text-red-400 text-center mt-2">{error}</p>}
+      {error && (
+        <p className="text-red-400 text-center mt-2">{error}</p>
+      )}
     </form>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
