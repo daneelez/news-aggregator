@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 interface RegisterProps {
   onRegisterSuccess: (token: string) => void;
 }
 
+const RECAPTCHA_SITE_KEY = '6Ld8g2IrAAAAAGWH_2KnqY6d4hBOuXHdy_OWB6ih';
+
 const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -20,11 +24,18 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!captchaToken) {
+      setError('Пожалуйста, подтвердите, что вы не робот.');
+      return;
+    }
+
     try {
       const response = await axios.post('https://your-api.com/register', {
         login,
         email,
         password,
+        captchaToken, // отправляем токен капчи на сервер для проверки
       });
       onRegisterSuccess(response.data.token);
       setError('');
@@ -40,18 +51,14 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={formStyle}
-      autoComplete="off"
-    >
+    <form onSubmit={handleSubmit} style={formStyle} autoComplete="off">
       <h2 style={{ textAlign: 'center', color: '#E0E0E0' }}>Регистрация</h2>
 
       <input
         type="text"
         placeholder="Логин"
         value={login}
-        onChange={e => setLogin(e.target.value)}
+        onChange={(e) => setLogin(e.target.value)}
         required
         style={inputStyle}
       />
@@ -60,7 +67,7 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         type="email"
         placeholder="Email"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
         required
         style={inputStyle}
       />
@@ -69,10 +76,18 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         type="password"
         placeholder="Пароль"
         value={password}
-        onChange={e => setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
         required
         style={inputStyle}
       />
+
+      <div style={{ margin: '1rem 0' }}>
+        <ReCAPTCHA
+          sitekey={RECAPTCHA_SITE_KEY}
+          onChange={(token) => setCaptchaToken(token)}
+          onExpired={() => setCaptchaToken(null)}
+        />
+      </div>
 
       <button type="submit" style={buttonStyle}>
         Зарегистрироваться

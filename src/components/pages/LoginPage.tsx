@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { useAuth } from '../../services/AuthContext.tsx';
+
+const RECAPTCHA_SITE_KEY = '6Ld8g2IrAAAAAGWH_2KnqY6d4hBOuXHdy_OWB6ih';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -18,10 +22,16 @@ const LoginPage = () => {
   }, []);
 
   const handleLogin = async () => {
+    if (!captchaToken) {
+      setError('Пожалуйста, подтвердите, что вы не робот.');
+      return;
+    }
+
     try {
       const response = await axios.post('https://your-api.com/login', {
         email,
         password,
+        captchaToken, // отправляем токен капчи на сервер
       });
 
       const token = response.data.token;
@@ -66,6 +76,14 @@ const LoginPage = () => {
         style={inputStyle}
       />
 
+      <div style={{ margin: '1rem 0' }}>
+        <ReCAPTCHA
+          sitekey={RECAPTCHA_SITE_KEY}
+          onChange={(token) => setCaptchaToken(token)}
+          onExpired={() => setCaptchaToken(null)}
+        />
+      </div>
+
       <button type="submit" style={buttonStyle}>
         Войти
       </button>
@@ -80,7 +98,7 @@ const formStyle: React.CSSProperties = {
   margin: '15% auto',
   padding: '2rem',
   borderRadius: '8px',
-  backgroundColor: '#3A3B3E', // чуть светлее фона страницы
+  backgroundColor: '#3A3B3E',
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.7)',
   display: 'flex',
   flexDirection: 'column',
