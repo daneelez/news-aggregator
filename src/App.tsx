@@ -1,7 +1,6 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from "./components/pages/Home.tsx";
 import RegisterPage from './components/pages/RegisterPage.tsx'
-import LoginPage from './components/pages/LoginPage.tsx'
 import ProfilePage from './components/pages/ProfilePage.tsx'
 import DigestPage from "./components/pages/DigestPage.tsx";
 import LoginPage from "./components/pages/LoginPage.tsx";
@@ -16,7 +15,6 @@ export const App = () => {
                 <Route path='/login' element={<LoginPage/>}/>
                 <Route path='/profile' element={<ProfilePage/>}/>
                 <Route path="/main" element={<MainPage/>}/>
-                <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/digest" element={
                     <DigestPage/>
                 }/>
