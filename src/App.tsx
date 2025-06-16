@@ -3,6 +3,9 @@ import Home from "./components/pages/Home.tsx";
 import RegisterPage from './components/pages/RegisterPage.tsx'
 import LoginPage from './components/pages/LoginPage.tsx'
 import ProfilePage from './components/pages/ProfilePage.tsx'
+import DigestPage from "./components/pages/DigestPage.tsx";
+import LoginPage from "./components/pages/LoginPage.tsx";
+import MainPage from "./components/pages/MainPage.tsx";
 
 export const App = () => {
     return (
@@ -12,9 +15,11 @@ export const App = () => {
                 <Route path='/register' element={<RegisterPage/>}/>
                 <Route path='/login' element={<LoginPage/>}/>
                 <Route path='/profile' element={<ProfilePage/>}/>
-                {/*<Route path="/news" element={<News/>}/>*/}
-                {/*<Route path="/settings" element={<Settings/>}/>*/}
-                {/* 404 fallback */}
+                <Route path="/main" element={<MainPage/>}/>
+                <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/digest" element={
+                    <DigestPage/>
+                }/>
                 <Route path="*" element={<div>Страница не найдена</div>}/>
             </Routes>
         </BrowserRouter>
