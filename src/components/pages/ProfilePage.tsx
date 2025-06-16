@@ -9,18 +9,17 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = ({ username, email, avatarUrl, onLogout }) => {
   useEffect(() => {
-    // Устанавливаем фон страницы при монтировании компонента
     const prevBg = document.body.style.backgroundColor;
     document.body.style.backgroundColor = '#2C2D30';
 
     return () => {
-      // Восстанавливаем фон при размонтировании
+
       document.body.style.backgroundColor = prevBg || '';
     };
   }, []);
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-[#3A3B3E] rounded-lg shadow-lg text-[#E0E0E0] font-sans overflow-hidden">
+    <div className="max-w-md mx-auto mt-55 p-6 bg-[#3A3B3E] rounded-lg shadow-lg text-[#E0E0E0] font-sans overflow-hidden">
       <div className="flex flex-col items-center gap-4">
         <div className="w-24 h-24 rounded-full border-2 border-[#4CAF50] overflow-hidden">
         </div>
