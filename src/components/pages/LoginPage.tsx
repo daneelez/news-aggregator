@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from './AuthContext.tsx';
+import { useAuth } from '../../services/AuthContext.tsx';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +9,13 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  useEffect(() => {
+    document.body.style.backgroundColor = '#2C2D30';
+    return () => {
+      document.body.style.backgroundColor = '';
+    };
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -36,21 +43,10 @@ const LoginPage = () => {
         e.preventDefault();
         handleLogin();
       }}
-      style={{
-        maxWidth: '400px',
-        margin: '15% auto',
-        padding: '2rem',
-        borderRadius: '8px',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-        backgroundColor: '#f9f9f9',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        fontFamily: 'Arial, sans-serif',
-        color: '#000',
-      }}
+      style={formStyle}
+      autoComplete="off"
     >
-      <h2 style={{ textAlign: 'center' }}>Вход</h2>
+      <h2 style={{ textAlign: 'center', color: '#E0E0E0' }}>Вход</h2>
 
       <input
         type="email"
@@ -74,29 +70,51 @@ const LoginPage = () => {
         Войти
       </button>
 
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+      {error && <p style={errorStyle}>{error}</p>}
     </form>
   );
 };
 
+const formStyle: React.CSSProperties = {
+  maxWidth: '400px',
+  margin: '15% auto',
+  padding: '2rem',
+  borderRadius: '8px',
+  backgroundColor: '#3A3B3E', // чуть светлее фона страницы
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.7)',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem',
+  fontFamily: 'Arial, sans-serif',
+  color: '#E0E0E0',
+};
+
 const inputStyle: React.CSSProperties = {
   padding: '10px',
-  borderRadius: '4px',
-  border: '1px solid #ccc',
+  borderRadius: '6px',
+  border: '1px solid #555',
   fontSize: '1rem',
-  color: '#000',
-  backgroundColor: '#fff',
+  color: '#E0E0E0',
+  backgroundColor: '#2C2D30',
+  outline: 'none',
+  transition: 'border-color 0.3s',
 };
 
 const buttonStyle: React.CSSProperties = {
   padding: '10px',
   backgroundColor: '#4CAF50',
-  color: '#fff',
+  color: '#FFFFFF',
   border: 'none',
-  borderRadius: '4px',
+  borderRadius: '6px',
   fontSize: '1rem',
   cursor: 'pointer',
   transition: 'background-color 0.3s',
+};
+
+const errorStyle: React.CSSProperties = {
+  color: '#FF6B6B',
+  textAlign: 'center',
+  marginTop: '0.5rem',
 };
 
 export default LoginPage;

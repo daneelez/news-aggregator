@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 interface RegisterProps {
   onRegisterSuccess: (token: string) => void;
 }
 
-const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
+const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    document.body.style.backgroundColor = '#2C2D30';
+    return () => {
+      document.body.style.backgroundColor = '';
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,21 +42,10 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      style={{
-        maxWidth: '400px',
-        margin: '13% auto',
-        padding: '2rem',
-        borderRadius: '8px',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-        backgroundColor: '#f9f9f9',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        fontFamily: 'Arial, sans-serif',
-        color: '#000',
-      }}
+      style={formStyle}
+      autoComplete="off"
     >
-      <h2 style={{ textAlign: 'center' }}>Регистрация</h2>
+      <h2 style={{ textAlign: 'center', color: '#E0E0E0' }}>Регистрация</h2>
 
       <input
         type="text"
@@ -82,29 +78,51 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         Зарегистрироваться
       </button>
 
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+      {error && <p style={errorStyle}>{error}</p>}
     </form>
   );
 };
 
+const formStyle: React.CSSProperties = {
+  maxWidth: '400px',
+  margin: '13% auto',
+  padding: '2rem',
+  borderRadius: '8px',
+  backgroundColor: '#3A3B3E',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.7)',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem',
+  fontFamily: 'Arial, sans-serif',
+  color: '#E0E0E0',
+};
+
 const inputStyle: React.CSSProperties = {
   padding: '10px',
-  borderRadius: '4px',
-  border: '1px solid #ccc',
+  borderRadius: '6px',
+  border: '1px solid #555',
   fontSize: '1rem',
-  color: '#000',
-  backgroundColor: '#fff',
+  color: '#E0E0E0',
+  backgroundColor: '#2C2D30',
+  outline: 'none',
+  transition: 'border-color 0.3s',
 };
 
 const buttonStyle: React.CSSProperties = {
   padding: '10px',
   backgroundColor: '#4CAF50',
-  color: '#fff',
+  color: '#FFFFFF',
   border: 'none',
-  borderRadius: '4px',
+  borderRadius: '6px',
   fontSize: '1rem',
   cursor: 'pointer',
   transition: 'background-color 0.3s',
 };
 
-export default Register;
+const errorStyle: React.CSSProperties = {
+  color: '#FF6B6B',
+  textAlign: 'center',
+  marginTop: '0.5rem',
+};
+
+export default RegisterPage;

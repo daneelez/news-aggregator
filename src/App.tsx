@@ -1,14 +1,14 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from "./components/pages/Home.tsx";
-import Register from './components/pages/Register.tsx'
-import LoginPage from './components/pages/Login.tsx'
+import RegisterPage from './components/pages/RegisterPage.tsx'
+import LoginPage from './components/pages/LoginPage.tsx'
 
-const App = () => {
+export const App = () => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home/>}/>
-                <Route path='/register' element={<Register/>}/>
+                <Route path='/register' element={<RegisterPage/>}/>
                 <Route path='/login' element={<LoginPage/>}/>
                 {/*<Route path="/news" element={<News/>}/>*/}
                 {/*<Route path="/settings" element={<Settings/>}/>*/}
@@ -19,4 +19,4 @@ const App = () => {
     )
 }
 
-export default App
+
