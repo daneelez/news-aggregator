@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star } from 'lucide-react';
+
 
 const Tickets = () => {
   const allTickets = new Array(50).fill(null).map((_, i) => `ticket-${i + 1}`);
@@ -18,7 +18,6 @@ const Tickets = () => {
   return (
     <div className="min-h-screen bg-[#2C2D30] text-white px-6 py-10">
       <div className="w-1/2">
-        {/* Избранные тикеры */}
         <div className="mb-10">
           <h2 className="text-3xl font-bold mb-4">⭐ Избранные тикеры</h2>
           <div className="flex flex-wrap gap-3">
@@ -27,9 +26,9 @@ const Tickets = () => {
                 <button
                   key={id}
                   onClick={() => toggleFavorite(id)}
-                  className="flex items-center gap-2 border-2 border-yellow-400 font-extrabold text-white bg-black px-4 py-2 rounded-full text-base transition duration-200 hover:bg-yellow-400 hover:text-black"
+                  className="flex items-center gap-2 border-2 border-yellow-400 font-extrabold text-white bg-black px-8 py-2 rounded-full text-base transition duration-200 hover:bg-yellow-400 hover:text-black"
                 >
-                  <Star className="w-4 h-4" />
+
                   RBSM
                 </button>
               ))
