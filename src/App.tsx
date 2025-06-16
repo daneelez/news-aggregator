@@ -1,19 +1,16 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Home from "./components/pages/Home.tsx";
 import DigestPage from "./components/pages/DigestPage.tsx";
 import LoginPage from "./components/pages/LoginPage.tsx";
-import ProtectedRoute from "./components/ui/ProtectedRoute.tsx";
+import MainPage from "./components/pages/MainPage.tsx";
 
 const App = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Home/>}/>
+                <Route path="/" element={<MainPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/digest" element={
-                    <ProtectedRoute>
-                        <DigestPage/>
-                    </ProtectedRoute>
+                    <DigestPage/>
                 }/>
                 {/*<Route path="/news" element={<News/>}/>*/}
                 {/*<Route path="/settings" element={<Settings/>}/>*/}
