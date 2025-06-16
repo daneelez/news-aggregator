@@ -9,8 +9,8 @@
 @custom-variant h-desktop (@media (min-height: 600px));
 
 @font-face {
-    font-family: Ubuntu;
-    src: url("/fonts/Ubuntu-Regular.ttf");
+    font-family: Martin Mono;
+    src: url("public/fonts/MartianMono-Regular.ttf");
 }
 
 @theme {
@@ -22,7 +22,7 @@
     --color-secondary-500: #FACC15;
     --color-secondary-900: #713F12;
 
-    --font-ubuntu: Ubuntu, "sans-serif";
+    --font-martin: Martin Mono, "sans-serif";
     --color-bg: #f1f1f1;
     --color-fg: rgba(216, 220, 220, 1);
     --sky-top: #87ceeb;
@@ -38,12 +38,16 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: transparent;
-        font-family: var(--font-ubuntu), fantasy;
+        font-family: var(--font-martin), sans-serif;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
     }
 
     html, body, #root {
         color: var(--color-fg);
+        overflow: hidden;
 
+        background-color: #212024;
         height: 100%;
         transition: background 0.3s ease;
     }

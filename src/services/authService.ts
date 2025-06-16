@@ -1,16 +1,21 @@
-import axios from 'axios'
-import {useAuthStore} from '../store/authStore.ts'
-
-const BASE = 'https://your-api.com/auth'
+import {useAuthStore} from '../store/authStore'
+import api from "./axios.ts";
 
 export async function login(email: string, password: string) {
-    const res = await axios.post(`${BASE}/login`, {email, password})
+    const res = await api.post('/auth/login', {email, password})
     const {token, refreshToken, user} = res.data
-    useAuthStore.getState().setAuth(token, refreshToken, user)
+    useAuthStore.getState().login(token, refreshToken, user)
 }
 
-export async function register(email: string, password: string) {
-    await axios.post(`${BASE}/register`, {email, password})
+export async function register(loginName: string, email: string, password: string, captchaToken: string) {
+    const res = await api.post('/auth/register', {
+        login: loginName,
+        email,
+        password,
+        captchaToken,
+    })
+    const {token, refreshToken, user} = res.data
+    useAuthStore.getState().login(token, refreshToken, user)
 }
 
 export function logout() {

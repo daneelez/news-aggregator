@@ -6,13 +6,11 @@ const tickers = ["GAZP", "SBER", "T"]
 const ChartSection = () => {
     const {selectedTicker, setTicker} = useTickerStore();
 
-    if (!selectedTicker) {
-        return <div className="text-center py-10 text-gray-400">Select a ticker to display the chart</div>;
-    }
-
     return (
         <div className="w-1/2 p-6">
-            <LightweightChart symbol={selectedTicker}/>
+            {selectedTicker
+                ? <LightweightChart symbol={selectedTicker}/>
+                : <div className="text-center py-10 text-gray-400">Select a ticker to display the chart</div>}
             <div className="flex gap-3 mb-4">
                 {tickers.map((ticker) => (
                     <button

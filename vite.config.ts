@@ -27,8 +27,8 @@ export default defineConfig({
                 dir: "ltr",
                 icons: [
                     {
-                        src: "/icons/icon192x192.png",
-                        sizes: "192x192",
+                        src: "/icons/icon512x512.png",
+                        sizes: "512x512",
                         type: "image/png",
                         purpose: "any"
                     },
@@ -43,22 +43,6 @@ export default defineConfig({
                         sizes: "512x512",
                         type: "image/png",
                         purpose: "maskable"
-                    }
-                ],
-                screenshots: [
-                    {
-                        src: "/screenshots/desktop.png",
-                        type: "image/png",
-                        sizes: "1918x862",
-                        form_factor: "wide",
-                        label: "Дашборд на десктопе"
-                    },
-                    {
-                        src: "/screenshots/mobile.png",
-                        type: "image/png",
-                        sizes: "398x756",
-                        form_factor: "narrow",
-                        label: "Мобильная лента новостей"
                     }
                 ],
             },

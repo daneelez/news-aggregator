@@ -1,99 +1,99 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import ReCAPTCHA from 'react-google-recaptcha';
-import { useAuth } from '../../services/AuthContext.tsx';
+import {type FormEvent, useState} from 'react'
+import {useNavigate, Link} from 'react-router-dom'
+import ReCAPTCHA from 'react-google-recaptcha'
+import {login} from '../../services/authService.ts'
+import {motion} from 'framer-motion'
+import Dropdown from "../ui/Dropdown.tsx"
+import {useTranslation} from "react-i18next";
 
-const RECAPTCHA_SITE_KEY = '6Ld8g2IrAAAAAGWH_2KnqY6d4hBOuXHdy_OWB6ih';
+const RECAPTCHA_SITE_KEY = '6Ld8g2IrAAAAAGWH_2KnqY6d4hBOuXHdy_OWB6ih'
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const { login } = useAuth();
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+    const [error, setError] = useState('')
+    const navigate = useNavigate()
 
-  useEffect(() => {
-    document.body.style.backgroundColor = '#2C2D30';
-    return () => {
-      document.body.style.backgroundColor = '';
-    };
-  }, []);
+    const {t} = useTranslation('translations')
 
-  const handleLogin = async () => {
-    if (!captchaToken) {
-      setError('Пожалуйста, подтвердите, что вы не робот.');
-      return;
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault()
+
+        if (!captchaToken) {
+            setError(t('captcha_required'))
+            return
+        }
+
+        try {
+            await login(email, password)
+            setError('')
+            navigate('/')
+        } catch {
+            setError(t("invalid_credentials"))
+        }
     }
 
-    try {
-      const response = await axios.post('https://your-api.com/login', {
-        email,
-        password,
-        captchaToken,
-      });
+    return (
+        <div className="min-h-screen flex-center bg-[#2C2D30] px-4">
+            <motion.form
+                initial={{opacity: 0, y: -20}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 1, ease: 'easeInOut'}}
+                onSubmit={handleSubmit}
+                className="w-full max-w-md bg-[#3A3B3E] p-8 rounded-2xl shadow-2xl flex flex-col gap-5 text-white"
+                autoComplete="off"
+            >
+                <h2 className="text-center text-3xl font-bold">{t('login')}</h2>
 
-      const token = response.data.token;
-      login(token);
-      setError('');
-      navigate('/digest');
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || 'Ошибка входа');
-      } else {
-        setError('Неизвестная ошибка');
-      }
-    }
-  };
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="px-4 py-3 rounded-lg bg-[#2C2D30] border border-[#555] text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                />
 
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleLogin();
-      }}
-      className="max-w-md mx-auto mt-[15%] p-8 bg-[#3A3B3E] rounded-lg shadow-lg flex flex-col gap-4 text-white"
-      autoComplete="off"
-    >
-      <h2 className="text-center text-xl font-semibold">Вход</h2>
+                <input
+                    type="password"
+                    placeholder={t("password")}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="px-4 py-3 rounded-lg bg-[#2C2D30] border border-[#555] text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                />
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className="px-4 py-2 rounded-md bg-[#2C2D30] border border-[#555] text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-      />
+                <div className="flex-center">
+                    <ReCAPTCHA
+                        sitekey={RECAPTCHA_SITE_KEY}
+                        onChange={(token) => setCaptchaToken(token)}
+                        onExpired={() => setCaptchaToken(null)}
+                    />
+                </div>
 
-      <input
-        type="password"
-        placeholder="Пароль"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        className="px-4 py-2 rounded-md bg-[#2C2D30] border border-[#555] text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-      />
+                <button
+                    type="submit"
+                    className="mt-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-300 font-semibold text-lg"
+                >
+                    {t('login_to_account')}
+                </button>
 
-      <div className="my-2 mt-4 ml-1">
-        <ReCAPTCHA
-          sitekey={RECAPTCHA_SITE_KEY}
-          onChange={(token) => setCaptchaToken(token)}
-          onExpired={() => setCaptchaToken(null)}
-        />
-      </div>
+                <Link
+                    to="/register"
+                    className="text-center text-sm text-gray-300 hover:text-green-400 transition underline"
+                >
+                    {t('no_account_register')}
+                </Link>
 
-      <button
-        type="submit"
-        className="px-4 py-2 mt-1 bg-green-600 hover:bg-green-700 text-white rounded-md transition duration-300"
-      >
-        Войти
-      </button>
+                {error && (
+                    <p className="text-red-400 text-center mt-2">{error}</p>
+                )}
+            </motion.form>
 
-      {error && <p className="text-red-400 text-center mt-2">{error}</p>}
-    </form>
-  );
-};
+            <Dropdown/>
+        </div>
+    )
+}
 
-export default LoginPage;
+export default LoginPage
