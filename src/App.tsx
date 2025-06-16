@@ -1,8 +1,17 @@
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import Home from "./components/pages/Home.tsx";
+
 const App = () => {
     return (
-        <div>
-            <h1 className='p-10 text-6xl font-bold text-center text-primary-500'>Hello world</h1>
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Home/>}/>
+                {/*<Route path="/news" element={<News/>}/>*/}
+                {/*<Route path="/settings" element={<Settings/>}/>*/}
+                {/* 404 fallback */}
+                <Route path="*" element={<div>Страница не найдена</div>}/>
+            </Routes>
+        </BrowserRouter>
     )
 }
 
