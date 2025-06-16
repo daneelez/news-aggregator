@@ -15,75 +15,44 @@ const Dropdown = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const menuItemStyle: React.CSSProperties = {
-    display: 'block',
-    padding: '10px 16px',
-    color: '#E0E0E0',
-    textDecoration: 'none',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
-  };
-
   return (
-    <div
-      ref={menuRef}
-      style={{
-        position: 'fixed',  // Фиксируем контейнер в углу экрана
-        top: 20,
-        right: 20,
-        zIndex: 1000,
-        display: 'inline-block',
-      }}
-    >
+    <div ref={menuRef} className="fixed top-5 right-5 z-[1000] inline-block">
       <button
         onClick={() => setOpen((prev) => !prev)}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-          padding: 0,
-          outline: 'none',
-        }}
+        className="p-0 border-none bg-transparent cursor-pointer focus:outline-none"
         aria-label="Меню"
       >
         <img
           src="/icons/application-menu.svg"
           alt="Меню"
-          style={{ width: 36, height: 36 }}
+          className="w-9 h-9"
         />
       </button>
 
       {open && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '100%', // под иконкой
-            right: 0,
-            marginTop: 8,
-            backgroundColor: '#3A3B3E',
-            borderRadius: 6,
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.7)',
-            overflow: 'hidden',
-            minWidth: 140,
-          }}
-        >
+        <div className="absolute top-full right-0 mt-2 min-w-[160px] rounded-md bg-[#3A3B3E] shadow-lg overflow-hidden animate-dropdown">
+          <Link
+            to="/profile"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 px-4 py-2 text-[#E0E0E0] hover:bg-[#555] transition-colors duration-200"
+          >
+            <img src="/icons/profile.svg" alt="Профиль" className="w-6 h-6 filter invert" />
+            Профиль
+          </Link>
           <Link
             to="/login"
-            style={menuItemStyle}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#555')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
             onClick={() => setOpen(false)}
+            className="flex items-center gap-2 px-4 py-2 text-[#E0E0E0] hover:bg-[#555] transition-colors duration-200"
           >
+            <img src="/icons/login.svg" alt="Вход" className="w-6 h-6 filter invert" />
             Вход
           </Link>
           <Link
             to="/register"
-            style={menuItemStyle}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#555')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
             onClick={() => setOpen(false)}
+            className="flex items-center gap-2 px-4 py-2 text-[#E0E0E0] hover:bg-[#555] transition-colors duration-200"
           >
+            <img src="/icons/reg.svg" alt="Регистрация" className="w-6 h-6 filter invert" />
             Регистрация
           </Link>
         </div>

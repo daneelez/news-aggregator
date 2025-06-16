@@ -35,7 +35,7 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         login,
         email,
         password,
-        captchaToken, // отправляем токен капчи на сервер для проверки
+        captchaToken,
       });
       onRegisterSuccess(response.data.token);
       setError('');
@@ -51,8 +51,12 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={formStyle} autoComplete="off">
-      <h2 style={{ textAlign: 'center', color: '#E0E0E0' }}>Регистрация</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-md mx-auto mt-[13%] p-8 bg-[#3A3B3E] rounded-lg shadow-lg flex flex-col gap-4 text-white"
+      autoComplete="off"
+    >
+      <h2 className="text-center text-xl font-semibold">Регистрация</h2>
 
       <input
         type="text"
@@ -60,7 +64,7 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         value={login}
         onChange={(e) => setLogin(e.target.value)}
         required
-        style={inputStyle}
+        className="px-4 py-2 rounded-md bg-[#2C2D30] border border-[#555] text-white focus:outline-none focus:ring-2 focus:ring-green-500"
       />
 
       <input
@@ -69,7 +73,7 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        style={inputStyle}
+        className="px-4 py-2 rounded-md bg-[#2C2D30] border border-[#555] text-white focus:outline-none focus:ring-2 focus:ring-green-500"
       />
 
       <input
@@ -78,10 +82,10 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
-        style={inputStyle}
+        className="px-4 py-2 rounded-md bg-[#2C2D30] border border-[#555] text-white focus:outline-none focus:ring-2 focus:ring-green-500"
       />
 
-      <div style={{ margin: '1rem 0' }}>
+      <div className="my-2">
         <ReCAPTCHA
           sitekey={RECAPTCHA_SITE_KEY}
           onChange={(token) => setCaptchaToken(token)}
@@ -89,55 +93,18 @@ const RegisterPage: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         />
       </div>
 
-      <button type="submit" style={buttonStyle}>
+      <button
+        type="submit"
+        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition duration-300"
+      >
         Зарегистрироваться
       </button>
 
-      {error && <p style={errorStyle}>{error}</p>}
+      {error && (
+        <p className="text-red-400 text-center mt-2">{error}</p>
+      )}
     </form>
   );
-};
-
-const formStyle: React.CSSProperties = {
-  maxWidth: '400px',
-  margin: '13% auto',
-  padding: '2rem',
-  borderRadius: '8px',
-  backgroundColor: '#3A3B3E',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.7)',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '1rem',
-  fontFamily: 'Arial, sans-serif',
-  color: '#E0E0E0',
-};
-
-const inputStyle: React.CSSProperties = {
-  padding: '10px',
-  borderRadius: '6px',
-  border: '1px solid #555',
-  fontSize: '1rem',
-  color: '#E0E0E0',
-  backgroundColor: '#2C2D30',
-  outline: 'none',
-  transition: 'border-color 0.3s',
-};
-
-const buttonStyle: React.CSSProperties = {
-  padding: '10px',
-  backgroundColor: '#4CAF50',
-  color: '#FFFFFF',
-  border: 'none',
-  borderRadius: '6px',
-  fontSize: '1rem',
-  cursor: 'pointer',
-  transition: 'background-color 0.3s',
-};
-
-const errorStyle: React.CSSProperties = {
-  color: '#FF6B6B',
-  textAlign: 'center',
-  marginTop: '0.5rem',
 };
 
 export default RegisterPage;
