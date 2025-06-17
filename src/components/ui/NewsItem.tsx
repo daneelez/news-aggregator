@@ -3,6 +3,7 @@ import {useState} from "react";
 import {useTranslation} from "react-i18next";
 import IconInfo from "../icons/IconInfo.tsx";
 import Modal from "../ui/Modal.tsx";
+import {useFormatDate} from "../../hooks/formatDate.ts";
 
 const NewsItem = ({
                       ticker,
@@ -13,7 +14,7 @@ const NewsItem = ({
                       description,
                       timestamp,
                   }: INews) => {
-    const {t, i18n} = useTranslation("translations");
+    const {t} = useTranslation("translations");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const priceClass = price_difference.trim().startsWith("-")
@@ -22,13 +23,7 @@ const NewsItem = ({
 
     const tickerClass = is_green ? "bg-[#06FF5B]" : "bg-red-600";
 
-    const formattedDate = new Date(timestamp).toLocaleString(i18n.language === 'ru' ? 'ru-RU' : 'en-US', {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    });
+    const formattedDate = useFormatDate(timestamp);
 
     return (
         <>

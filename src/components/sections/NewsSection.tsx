@@ -7,6 +7,7 @@ import {useTickerStore} from "../../store/tickerStore.ts";
 import {useCallback, useEffect, useRef} from "react";
 import {fetchAllNews} from "../../services/newsService.ts";
 import {useNewsStore} from "../../store/newsStore.ts";
+import {isInTimeRange} from "../../utils/isInTimeRange.ts";
 
 const NewsSection = () => {
     const {
@@ -24,7 +25,7 @@ const NewsSection = () => {
     const {t} = useTranslation('translations');
 
     const {selectedTicker} = useTickerStore();
-    const {sources, predict} = useFilterStore();
+    const {sources, predict, timeRange} = useFilterStore();
 
     useEffect(() => {
         async function load() {
@@ -49,15 +50,16 @@ const NewsSection = () => {
 
     useEffect(() => {
         resetVisibleCount();
-    }, [selectedTicker, sources, predict, resetVisibleCount]);
+    }, [selectedTicker, sources, predict, timeRange, resetVisibleCount]);
 
     const filteredNews = news.filter((n) => {
         if (selectedTicker && selectedTicker !== n.ticker) return false;
         const domain = parseDomain(n.source);
         if (sources.length > 0 && !sources.includes(domain)) return false;
         if (predict === 'positive' && !n.is_green) return false;
-        return !(predict === 'negative' && n.is_green);
-
+        if (predict === 'negative' && n.is_green) return false;
+        if (!isInTimeRange(n.timestamp)) return false;
+        return true;
     });
 
     const visibleNews = filteredNews.slice(0, visibleCount);

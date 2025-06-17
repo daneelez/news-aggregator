@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
     createChart,
     type IChartApi,
@@ -9,6 +9,7 @@ import {
 } from 'lightweight-charts';
 import {useTranslation} from "react-i18next";
 import IconGraph from "../icons/IconGraph.tsx";
+import TimeRangeSelector from "./TimeRangeSelector.tsx";
 
 interface LightweightChartProps {
     symbol: string | null;
@@ -25,11 +26,13 @@ const mockData: LineData<UTCTimestamp>[] = [
 ];
 
 const LightweightChart = ({symbol}: LightweightChartProps) => {
-    const {t} = useTranslation('translations')
-
+    const {t} = useTranslation('translations');
     const chartContainerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<IChartApi | null>(null);
     const lineSeriesRef = useRef<ISeriesApi<'Line'> | null>(null);
+    const [daysRange] = useState<number>(7);
+
+    const filteredData = mockData.slice(-daysRange);
 
     useEffect(() => {
         const container = chartContainerRef.current;
@@ -71,7 +74,7 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
         });
         lineSeriesRef.current = lineSeries;
 
-        lineSeries.setData(mockData);
+        lineSeries.setData(filteredData);
 
         const handleResize = () => {
             if (chartRef.current && chartContainerRef.current) {
@@ -89,7 +92,7 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
                 lineSeriesRef.current = null;
             }
         };
-    }, [symbol]);
+    }, [symbol, daysRange]);
 
     return (
         <div className="flex flex-col w-[80%] rounded-lg">
@@ -99,6 +102,7 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
                     {t('tickerChart')}
                 </h2>
             </div>
+            <TimeRangeSelector/>
             <div ref={chartContainerRef} className="w-full h-full mb-6"/>
         </div>
     );
