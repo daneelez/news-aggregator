@@ -26,7 +26,7 @@ const LoginPage = () => {
         }
 
         try {
-            await login(email, password)
+            await login(email, password,captchaToken)
             setError('')
             navigate('/')
         } catch {
