@@ -39,7 +39,7 @@ const NewsItem = ({
                     {price_difference}
                 </div>
 
-                <p className="text-sm mb-10 max-w-[80%] whitespace-pre-line">{summary_text}</p>
+                <p className="text-sm mb-10 max-w-[70%] whitespace-pre-line">{summary_text}</p>
 
                 <a
                     href={source}

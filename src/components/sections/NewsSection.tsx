@@ -57,7 +57,7 @@ const NewsSection = () => {
         if (sources.length > 0 && !sources.includes(domain)) return false;
         if (predict === 'positive' && !n.is_green) return false;
         return !(predict === 'negative' && n.is_green);
-        
+
     });
 
     const visibleNews = filteredNews.slice(0, visibleCount);
@@ -102,13 +102,13 @@ const NewsSection = () => {
             <div className="flex mb-4 py-8">
                 <h2 className="text-4xl font-bold">{t("news")}</h2>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
                 <FilterSection/>
-                {error && <p className="text-red-500 flex-center border p-2 rounded-lg">{error}</p>}
+                {error && <p className="text-red-500 flex-center border p-2 rounded-lg mb-4 font-bold">{error}</p>}
             </div>
 
 
-            <div className="news-section overflow-y-auto p-4">
+            <div className="flex flex-col  overflow-y-auto py-4">
                 {visibleNews.map((newsItem, idx) => (
                     <TickerNews key={idx} {...newsItem} />
                 ))}
