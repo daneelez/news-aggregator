@@ -58,8 +58,7 @@ const NewsSection = () => {
         if (sources.length > 0 && !sources.includes(domain)) return false;
         if (predict === 'positive' && !n.is_green) return false;
         if (predict === 'negative' && n.is_green) return false;
-        if (!isInTimeRange(n.timestamp)) return false;
-        return true;
+        return isInTimeRange(n.timestamp);
     });
 
     const visibleNews = filteredNews.slice(0, visibleCount);
@@ -82,7 +81,7 @@ const NewsSection = () => {
         const option = {
             root: null,
             rootMargin: '20px',
-            threshold: 1.0,
+            threshold: 1,
         };
 
         const observer = new IntersectionObserver(handleObserver, option);
