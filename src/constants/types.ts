@@ -1,0 +1,1 @@
+export type PredictFilter = 'all' | 'positive' | 'negative';

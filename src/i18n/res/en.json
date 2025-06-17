@@ -3,8 +3,8 @@
   "news": "News feed",
   "read": "Read",
   "profile": "Profile",
-  "predict": "By predicate",
-  "source": "By source",
+  "predict": "by predicate",
+  "source": "by source",
   "telegram": "Telegram",
   "Rbk": "Rbk",
   "login": "Sign in",
@@ -35,5 +35,8 @@
   "light": "Light",
   "tickerChart": "Ticker chart",
   "read_full_article": "Read full article",
-  "ai_prediction": "AI Prediction"
+  "ai_prediction": "AI Prediction",
+  "positive": "Positive",
+  "negative": "Negative",
+  "noMatchingNews": "No matching news"
 }

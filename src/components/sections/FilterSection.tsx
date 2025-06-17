@@ -1,99 +1,88 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { RbkIcon } from '../icons/IconRbk.tsx';
-import { TelegramIcon } from '../icons/IconTelegram.tsx';
-import { useTranslation } from "react-i18next";
+import {useEffect, useRef, useState} from 'react'
+import {RbkIcon} from '../icons/IconRbk'
+import {TelegramIcon} from '../icons/IconTelegram'
+import {useTranslation} from 'react-i18next'
+import {useFilterStore} from '../../store/filterStore'
+import type {PredictFilter} from '../../constants/types'
+import FilterItem from "../ui/FilterItem.tsx";
+import FilterOption from "../ui/FilterOption.tsx";
 
-const SourceSelector = () => {
-    const [activeTab, setActiveTab] = useState<'source' | 'predict' | null>(null);
-    const [selectedSources, setSelectedSources] = useState<string[]>([]);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const { t } = useTranslation('translations');
-    const sources = [
-        { name: t('Rbk'), icon: <RbkIcon className="w-5 h-5" /> },
-        { name: t('telegram'), icon: <TelegramIcon className="w-5 h-5" /> }
-    ];
+const FilterSection = () => {
+    const {t} = useTranslation('translations')
+    const [activeTab, setActiveTab] = useState<'source' | 'predict' | null>(null)
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const dropdownRef = useRef<HTMLDivElement>(null)
 
-    const toggleSource = (sourceName: string) => {
-        setSelectedSources(prev =>
-            prev.includes(sourceName)
-                ? prev.filter(s => s !== sourceName)
-                : [...prev, sourceName]
-        );
-    };
+    const {sources, toggleSource, predict, setPredict} = useFilterStore()
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false)
+                setActiveTab(null)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
+
+    const sourceOptions = [
+        {key: 'rbk.ru', label: t('Rbk'), icon: <RbkIcon className="w-5 h-5"/>},
+        {key: 'telegram', label: t('telegram'), icon: <TelegramIcon className="w-5 h-5"/>},
+    ]
+
+    const predictOptions = [
+        {key: 'positive', label: t('positive')},
+        {key: 'negative', label: t('negative')},
+    ]
+
+    const toggleTab = (tab: 'source' | 'predict') => {
+        setIsDropdownOpen(prev => activeTab !== tab || !prev)
+        setActiveTab(prev => (prev === tab ? null : tab))
+    }
+
+    const renderSourceItems = () => sourceOptions.map(({key, label, icon}) => (
+        <FilterItem
+            key={key}
+            label={label}
+            icon={icon}
+            checked={sources.includes(key)}
+            onClick={() =>
+                toggleSource(key)
+            }
+        />
+    ))
+
+    const renderPredictItems = () => predictOptions.map(({key, label}) => (
+        <FilterItem
+            key={key}
+            label={label}
+            checked={predict === key}
+            onClick={() =>
+                setPredict(key as PredictFilter)
+            }
+        />
+    ))
 
     return (
-        <div className="mt-6 md:mt-13 rounded-lg">
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 mb-4">
-                <button
-                    className={`px-4 sm:px-8 py-2 sm:py-3 rounded-full border-3 font-bold text-sm sm:text-base transition-all select-none
-                        ${
-                        activeTab === 'source'
-                            ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white'
-                            : 'bg-white dark:bg-[#2C2D30] text-black dark:text-white border-black dark:border-white'
-                    }`}
-                    onClick={() => {
-                        setActiveTab('source');
-                        setIsDropdownOpen(prev => !prev);
-                    }}
-                >
-                    {t('source')}
-                </button>
+        <div className="flex w-md:flex-col flex-row gap-3 mb-4">
+            <FilterOption
+                title={t('source')}
+                isActive={activeTab === 'source' && isDropdownOpen}
+                onClick={() => toggleTab('source')}
+            >
+                {renderSourceItems()}
+            </FilterOption>
 
-                <button
-                    className={`px-4 sm:px-8 py-2 sm:py-3 rounded-full border-3 font-bold text-sm sm:text-base transition-all select-none
-                        ${
-                        activeTab === 'predict'
-                            ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white'
-                            : 'bg-white dark:bg-[#2C2D30] text-black dark:text-white border-black dark:border-white'
-                    }`}
-                    onClick={() => {
-                        setActiveTab('predict');
-                        setIsDropdownOpen(false);
-                    }}
-                >
-                    {t('predict')}
-                </button>
-            </div>
-
-            <AnimatePresence>
-                {activeTab === 'source' && isDropdownOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                        className="ml-1 mt-1 bg-black dark:bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 w-full max-w-xs space-y-2 sm:space-y-3 shadow-lg select-none"
-                    >
-                        {sources.map(({name, icon}) => (
-                            <motion.div
-                                key={name}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="flex items-center justify-between py-2 px-3 rounded-lg"
-                                onClick={() => toggleSource(name)}
-                            >
-                                <div className="flex items-center">
-                                    <span className="mr-2 sm:mr-3">{icon}</span>
-                                    <span className="text-white dark:text-black font-medium text-sm sm:text-base select-none">{t(name)}</span>
-                                </div>
-
-                                {selectedSources.includes(name) && (
-                                    <motion.span
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        className="text-white dark:text-black text-base sm:text-lg select-none"
-                                    >
-                                        ✓
-                                    </motion.span>
-                                )}
-                            </motion.div>
-                        ))}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <FilterOption
+                title={t('predict')}
+                isActive={activeTab === 'predict' && isDropdownOpen}
+                onClick={() => toggleTab('predict')}
+            >
+                {renderPredictItems()}
+            </FilterOption>
         </div>
-    );
-};
+    )
+}
 
-export default SourceSelector;
+export default FilterSection;
