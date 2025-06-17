@@ -9,14 +9,15 @@
 @custom-variant h-desktop (@media (min-height: 600px));
 @custom-variant h-minimal (@media (max-height: 360px));
 @custom-variant w-mobile (@media (max-width: 420px));
+@custom-variant w-md (@media (max-width: 600px));
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
     font-family: Martin Mono;
     src: url("public/fonts/MartianMono-Regular.ttf");
+    font-display: swap;
 }
-
 
 @theme {
     --color-primary-50: #EBF5FF;
@@ -37,6 +38,10 @@
     --color-hover-dark: #44484d;
     --color-active-light: #e0e0e0;
     --color-active-dark: #3b3f45;
+    --color-bg: #ffffff;
+
+    --color-alt-text-light: #ffffff;
+    --color-alt-text-dark: black;
 }
 
 :root {
@@ -80,6 +85,10 @@
     a {
         color: inherit;
         text-decoration: none;
+    }
+
+    ul, li {
+        list-style: none;
     }
 
     input, button, textarea, select {

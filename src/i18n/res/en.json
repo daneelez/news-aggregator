@@ -1,6 +1,6 @@
 {
   "lang": "en",
-  "news": "News",
+  "news": "News feed",
   "read": "Read",
   "profile": "Profile",
   "predict": "By predicate",
@@ -32,5 +32,8 @@
   "language": "Language",
   "theme": "Theme",
   "dark": "Dark",
-  "light": "Light"
+  "light": "Light",
+  "tickerChart": "Ticker chart",
+  "read_full_article": "Read full article",
+  "ai_prediction": "AI Prediction"
 }

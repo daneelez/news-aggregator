@@ -1,7 +1,11 @@
-export interface IArticle {
-    title: string
+export interface INews {
+    ticker: string
+    source: string
+    summary_text: string
+    price_difference: string
+    is_green: boolean
     description: string
-    url: string
+    timestamp: string
 }
 
 export interface IIcon {
@@ -11,7 +15,7 @@ export interface IIcon {
 export interface IUser {
     login: string
     email: string
-    tickers: string[]
+    tickers: ITicker[]
 }
 
 export interface ITicker {

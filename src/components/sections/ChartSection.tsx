@@ -1,29 +1,13 @@
-import {useTickerStore} from '../../store/tickerStore';
+import TickerSection from "./TickerSection.tsx";
 import LightweightChart from "../ui/LightweightChart.tsx";
-
-const tickers = ["GAZP", "SBER", "T"]
+import {useTickerStore} from "../../store/tickerStore.ts";
 
 const ChartSection = () => {
-    const {selectedTicker, setTicker} = useTickerStore();
-
+    const {selectedTicker} = useTickerStore();
     return (
-        <div className="w-1/2 p-6">
-            {selectedTicker
-                ? <LightweightChart symbol={selectedTicker}/>
-                : <div className="text-center py-10 text-gray-400">Select a ticker to display the chart</div>}
-            <div className="flex gap-3 mb-4">
-                {tickers.map((ticker) => (
-                    <button
-                        key={ticker}
-                        onClick={() => setTicker(ticker)}
-                        className={`px-4 py-2 rounded-lg border-2 ${
-                            selectedTicker === ticker ? 'bg-primary-500 border-primary-400' : 'border-gray-600'
-                        }`}
-                    >
-                        {ticker}
-                    </button>
-                ))}
-            </div>
+        <div className="w-1/2 w-md:w-full p-4 overflow-y-auto bg-bg w-md:min-h-[60%] border-b">
+            <LightweightChart symbol={selectedTicker}/>
+            <TickerSection/>
         </div>
     );
 };

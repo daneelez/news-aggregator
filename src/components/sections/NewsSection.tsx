@@ -1,64 +1,45 @@
-import {useTickerStore} from "../../store/tickerStore"
-import {useEffect, useRef, useState} from "react"
-import {fetchNewsByTicker} from "../../services/newsService"
-import type {IArticle} from "../../constants/interfaces.ts";
 import {useTranslation} from "react-i18next";
-import FilterSection from './FilterSection.tsx'
+import TickerNews from "../ui/NewsItem.tsx";
+import type {INews} from "../../constants/interfaces.ts";
 
 const NewsSection = () => {
-    const {selectedTicker} = useTickerStore()
-    const [news, setNews] = useState<IArticle[]>([])
-    const [page, setPage] = useState(1)
-    const loader = useRef(null)
-
     const {t} = useTranslation('translations')
 
-    useEffect(() => {
-        if (!selectedTicker) return;
-
-        fetchNewsByTicker(selectedTicker, page).then(newArticles => {
-            if (page === 1) {
-                setNews(newArticles)
-            } else {
-                setNews(prev => [...prev, ...newArticles])
-            }
-        })
-    }, [selectedTicker, page])
-
-    useEffect(() => {
-        setPage(1)
-    }, [selectedTicker])
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            entries => {
-                if (entries[0].isIntersecting) setPage(p => p + 1)
-            },
-            {threshold: 1}
-        )
-
-        if (loader.current) observer.observe(loader.current)
-        return () => observer.disconnect()
-    }, [])
+    const mockNews: INews[] = [
+        {
+            ticker: "SBER",
+            source: "https://example.com/news/sber",
+            summary_text:
+                "Сильнее всего за неделю ставки по рыночной ипотеке снизились на строительство дома — на 2,2 п.п.",
+            price_difference: "+4%",
+            is_green: true,
+            description:
+                "Полное описание прогноза нейросети по рынку ипотеки и строительству домов...",
+            timestamp: "2025-06-17T09:45:00Z",
+        },
+        {
+            ticker: "GAZP",
+            source: "https://example.com/news/gazp",
+            summary_text: "Газпром сообщил об увеличении экспорта на 5% за первый квартал.",
+            price_difference: "-2.5%",
+            is_green: false,
+            description: "Подробности по увеличению экспорта и рыночной реакции на событие...",
+            timestamp: "2025-06-16T14:20:00Z",
+        },
+    ];
 
     return (
-        <div className="w-1/2 p-4 overflow-y-auto bg-neutral-800 rounded-tl-xl">
-            <div className="flex justify-between items-center mb-4 p-8">
-                <h2 className="text-4xl font-bold text-white">{t('news')}</h2>
-                <div className="cursor-pointer text-white"></div>
+        <div
+            className="w-1/2 w-md:w-full min-h-full w-md:min-h-[30%] text-text p-4 ml-2 w-md:ml-0 w-md:mb-5 overflow-y-auto bg-bg-nd-light dark:bg-bg-nd-dark rounded-tl-xl w-md:rounded-none">
+            <div className="flex mb-4 py-8">
+                <h2 className="text-4xl font-bold">{t("news")}</h2>
             </div>
-            <FilterSection/>
 
-            {news.map((n, i) => (
-                <div key={i} className="bg-black/40 p-3 mb-2 rounded-md text-white">
-                    <h3 className="font-bold">{n.title}</h3>
-                    <p>{n.description}</p>
-                    <a className="text-green-400" href={n.url} target="_blank">{t("read")} →</a>
-                </div>
+            {mockNews.map((news, idx) => (
+                <TickerNews key={idx} {...news} />
             ))}
-            <div ref={loader} className="h-10"/>
         </div>
-    )
-}
+    );
+};
 
 export default NewsSection
