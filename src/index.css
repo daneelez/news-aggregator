@@ -13,6 +13,11 @@
     src: url("/fonts/Ubuntu-Regular.ttf");
 }
 
+.dark {
+    --background:
+
+}
+
 @theme {
     --color-primary-50: #EBF5FF;
     --color-primary-500: #3B82F6;

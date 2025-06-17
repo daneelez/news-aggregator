@@ -16,7 +16,7 @@ const Dropdown = () => {
   }, []);
 
   return (
-    <div ref={menuRef} className="fixed top-5 right-5 z-[1000] inline-block">
+    <div ref={menuRef} className="fixed top-15 right-5 z-[1000] inline-block">
       <button
         onClick={() => setOpen((prev) => !prev)}
         className="p-0 border-none bg-transparent cursor-pointer focus:outline-none"
@@ -25,7 +25,7 @@ const Dropdown = () => {
         <img
           src="/icons/application-menu.svg"
           alt="Меню"
-          className="w-9 h-9"
+          className="w-12 h-12"
         />
       </button>
 
