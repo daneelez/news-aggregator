@@ -25,6 +25,14 @@ const mockData: LineData<UTCTimestamp>[] = [
     {time: 1718524800 as UTCTimestamp, value: 162.88},
 ];
 
+
+function formatTime(timestamp: UTCTimestamp): string {
+    const date = new Date(timestamp * 1000);
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    return `${day}.${month}`;
+}
+
 const LightweightChart = ({symbol}: LightweightChartProps) => {
     const {t} = useTranslation('translations');
     const chartContainerRef = useRef<HTMLDivElement | null>(null);
@@ -46,10 +54,26 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
 
         const chart = createChart(container, {
             width: container.clientWidth,
-            height: 300,
+            height: 350,
             layout: {
-                background: {color: '#0a0a0a'},
+                background: {color: '#212024'},
                 textColor: '#d1d4dc',
+                fontFamily: "'Roboto', sans-serif",
+                fontSize: 14,
+            },
+            rightPriceScale: {
+
+                visible: true,
+                borderVisible: true,
+                autoScale: true,
+                scaleMargins: {
+                    top: 0.1,
+                    bottom: 0.1,
+                },
+                // Отступ слева и форматирование цен с $
+                priceFormatter: price => `$${price.toFixed(2)}`,
+                // Добавим padding слева через options (padding в px)
+                paddingLeft: 10,
             },
             grid: {
                 vertLines: {color: '#2B2B43'},
@@ -58,19 +82,21 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
             crosshair: {
                 mode: 1,
             },
-            rightPriceScale: {
-                borderColor: '#71649C',
-            },
             timeScale: {
-                borderColor: '#71649C',
+
+                tickMarkFormatter: formatTime,
             },
         });
 
         chartRef.current = chart;
 
         const lineSeries = chart.addSeries(LineSeries, {
-            color: '#2962FF',
-            lineWidth: 2,
+            color: 'rgba(97, 93, 250, 0.85)',
+            lineWidth: 4,
+            priceLineVisible: true,
+            lastValueVisible: true,
+            priceLineColor: 'rgba(97, 93, 250, 0.6)',
+            lastValueTextColor: '#615dfa',
         });
         lineSeriesRef.current = lineSeries;
 
@@ -95,7 +121,7 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
     }, [symbol, daysRange]);
 
     return (
-        <div className="flex flex-col w-[80%] rounded-lg">
+        <div className="flex flex-col w-full max-w-[1200px] rounded-lg mx-auto">
             <div className="flex items-center mb-4 py-8 gap-4">
                 <IconGraph className='w-12 h-12 text-text'/>
                 <h2 className="text-4xl font-bold">
@@ -103,7 +129,10 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
                 </h2>
             </div>
             <TimeRangeSelector/>
-            <div ref={chartContainerRef} className="w-full h-full mb-6"/>
+            <div
+              ref={chartContainerRef}
+              className="w-full h-[350px] mb-6 rounded-lg shadow-lg bg-[#121212] transition-all duration-500"
+            />
         </div>
     );
 };
