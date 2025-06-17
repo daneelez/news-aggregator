@@ -1,18 +1,7 @@
-import api from "./axios.ts";
+import api from './axios.ts';
+import type {INews} from '../constants/interfaces.ts';
 
-export async function fetchNewsByTicker(ticker: string, page: number) {
-    try {
-        const res = await api.get("https://gnews.io/api/v4/search", {
-            params: {
-                q: ticker,
-                lang: "ru",
-                max: 5,
-                page,
-            },
-        })
-
-        return res.data.articles || []
-    } catch {
-        return []
-    }
+export async function fetchAllNews(): Promise<INews[]> {
+    const res = await api.get('/news');
+    return res.data as INews[];
 }

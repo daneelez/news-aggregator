@@ -38,5 +38,6 @@
   "ai_prediction": "AI Prediction",
   "positive": "Positive",
   "negative": "Negative",
-  "noMatchingNews": "No matching news"
+  "noMatchingNews": "No matching news",
+  "noMoreNews": "No more news to load..."
 }
