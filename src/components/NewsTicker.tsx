@@ -16,13 +16,13 @@ const TickerNews = ({ sentiment }: TickerNewsProps) => {
       : 'bg-red-600 text-white';
 
   return (
-    <div className="mt-5 relative p-6 rounded-lg bg-[#1E1F22] text-white shadow-lg max-h-[400px] overflow-auto">
+    <div className="mt-5 relative p-6 rounded-lg bg-[#1E1F22] text-white shadow-lg max-h-[400px] max-w-4/5 overflow-auto">
       <div className={`absolute top-4 right-4 px-3 py-1 rounded-full ${sentimentClass}`}>
         <span className="text-sm font-bold">{selectedTicker}</span>
       </div>
 
       <h2 className="text-lg font-semibold mb-2">
-        В России снизились средние ставки <br />по рыночной ипотеке
+        В России снизились средние <br/> ставки по рыночной ипотеке
       </h2>
 
       <p className="text-sm text-gray-400 mb-4">{title}</p>

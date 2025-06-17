@@ -29,7 +29,7 @@ const Tickets = () => {
               </button>
             ))
           ) : (
-            <p className="text-gray-400 text-sm">Нет избранных тикеров</p>
+            <p className="text-gray-400 text-l">Нет избранных тикеров</p>
           )}
         </div>
       </div>
@@ -44,7 +44,7 @@ const Tickets = () => {
               <button
                 key={id}
                 onClick={() => toggleFavorite(id)}
-                className={`w-30 px-3 py-2 text-sm font-bold border-3 rounded-full transition duration-200
+                className={`w-30 px-3 py-2 text-l font-bold border-3 rounded-full transition duration-200
                   ${
                     favorite
                       ? 'border-white text-white hover:bg-white hover:text-black'

@@ -16,14 +16,14 @@ const SourceSelector = () => {
   };
 
   return (
-    <div className="p-6 rounded-lg">
-      <div className="flex gap-4 mb-4">
+    <div className="mt-13 rounded-lg">
+      <div className="flex gap-5 mb-4">
         <button
-          className={`px-6 py-3 rounded-full border-3 font-bold text-sm transition-all
+          className={`px-12 py-3 rounded-full border-3 font-bold text-l transition-all
             ${
               activeTab === 'source'
                 ? 'bg-white text-black border-white'
-                : 'bg-black text-white border-white'
+                : 'bg-[#2C2D30] text-white border-white'
             }`}
           onClick={() => {
             setActiveTab('source');
@@ -34,11 +34,11 @@ const SourceSelector = () => {
         </button>
 
         <button
-          className={`px-6 py-3 rounded-full border-2 font-bold text-sm transition-all
+          className={`px-12 text-l py-1 rounded-full border-3 font-bold transition-all
             ${
               activeTab === 'predict'
                 ? 'bg-white text-black border-white'
-                : 'bg-black text-white border-white'
+                : 'bg-[#2C2D30] text-white border-white'
             }`}
           onClick={() => {
             setActiveTab('predict');
@@ -50,7 +50,7 @@ const SourceSelector = () => {
       </div>
 
       {activeTab === 'source' && isDropdownOpen && (
-        <div className="mt-2 bg-[#2C2D30] rounded-lg p-4">
+        <div className="ml-1 mt-1 bg-[#FFFFFF] rounded-3xl p-2 max-w-1/3">
           {sources.map(source => (
             <div
               key={source}
@@ -60,14 +60,14 @@ const SourceSelector = () => {
               <div className={`w-5 h-5 border-2 rounded mr-3 flex items-center justify-center
                 ${
                   selectedSources.includes(source)
-                    ? 'bg-white border-white'
-                    : 'border-white'
+                    ? 'bg-black border-black'
+                    : 'border-black'
                 }`}>
                 {selectedSources.includes(source) && (
                   <span className="text-black text-xs">✓</span>
                 )}
               </div>
-              <span className="text-white">{source}</span>
+              <span className="text-black">{source}</span>
             </div>
           ))}
         </div>

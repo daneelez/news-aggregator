@@ -14,10 +14,12 @@ const Home = () => {
                     <Tickets/>
                 </div>
                 <div className="w-1/2 mt-10">
-                    <h2 className="text-5xl font-bold mb-4">Лента новостей</h2>
+                    <div className={'ml-10'}>
+                        <h2 className="text-5xl font-bold mb-4">Лента новостей</h2>
+                        <ChooseSearch/>
 
-                    <Dropdown/>
-                    <div className={'mt-8'}></div>
+                        <Dropdown/>
+                        <div className={'mt-8'}></div>
 
                         <NewsTicker sentiment={'positive'}/>
                         <NewsTicker sentiment={'negative'}/>
@@ -25,6 +27,7 @@ const Home = () => {
                         <NewsTicker sentiment={'positive'}/>
 
 
+                    </div>
                 </div>
             </div>
 
