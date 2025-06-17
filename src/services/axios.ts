@@ -2,7 +2,7 @@ import axios from 'axios'
 import {useAuthStore} from '../store/authStore'
 
 const api = axios.create({
-    baseURL: 'https://your-api.com',
+    baseURL: 'https://localhost:8080',
     withCredentials: true,
 })
 
@@ -32,7 +32,7 @@ api.interceptors.response.use(
             if (!isRefreshing) {
                 isRefreshing = true
                 try {
-                    const response = await axios.post('https://your-api.com/auth/refresh', {refreshToken})
+                    const response = await axios.post('https:localhost:8080/auth/refresh', {refreshToken})
                     const {token: newToken} = response.data
                     useAuthStore.getState().login(newToken, refreshToken, useAuthStore.getState().user!)
                     onRefreshed(newToken)
@@ -58,3 +58,4 @@ api.interceptors.response.use(
 )
 
 export default api
+
