@@ -23,7 +23,7 @@ const ProfilePage = () => {
         }
     }, [isAuthenticated, navigate])
 
-    if (!user) return null
+    if (!user) return <h2 className="flex-center text-center text-6xl font-bold">{t('login')}</h2>
 
     const handleLogout = () => {
         logout()
@@ -62,23 +62,23 @@ const ProfilePage = () => {
     const availableTickers = tickers.filter((t) => !user.tickers.includes(t.name))
 
     return (
-        <div className="h-screen bg-[#2C2D30] flex-center p-6 overflow-y-auto">
+        <div className="h-screen bg-bg flex-center p-12 overflow-y-auto">
             <motion.div
                 initial={{opacity: 0, y: 20}}
                 animate={{opacity: 1, y: 0}}
                 transition={{duration: 0.4}}
-                className="w-full max-w-6xl bg-[#3A3B3E] rounded-2xl shadow-2xl p-6 text-white flex flex-col md:flex-row gap-6"
+                className="w-full max-w-6xl bg-bg-nd-light dark:bg-bg-nd-dark h-mobile:mt-auto rounded-2xl shadow-2xl p-6 text-text flex flex-col md:flex-row gap-6"
             >
 
                 <div className="md:w-1/2 w-full flex flex-col gap-4">
                     <div className="flex items-center gap-4">
                         <div
-                            className="w-20 h-20 rounded-full border-2 border-[#4CAF50] bg-[#444] flex-center text-3xl font-bold">
+                            className="w-20 h-20 rounded-full border-2 border-[#4CAF50] bg-active-light dark:bg-active-dark flex-center text-3xl font-bold">
                             {user.login[0].toUpperCase()}
                         </div>
                         <div>
                             <h1 className="text-xl font-semibold">{user.login}</h1>
-                            <p className="text-sm text-gray-400">{user.email}</p>
+                            <p className="text-sm text-text opacity-45">{user.email}</p>
                         </div>
                     </div>
 
@@ -88,7 +88,7 @@ const ProfilePage = () => {
                             type="password"
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="w-full bg-[#2C2D30] border border-[#555] rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-[#4CAF50]"
+                            className="w-full bg-alt-light dark:bg-alt-dark border border-[#555] rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-[#4CAF50]"
                         />
 
                         <label className="block text-sm">{t('newPassword')}</label>
@@ -96,13 +96,13 @@ const ProfilePage = () => {
                             type="password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full bg-[#2C2D30] border border-[#555] rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-[#4CAF50]"
+                            className="w-full bg-alt-light dark:bg-alt-dark border border-[#555] rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-[#4CAF50]"
                         />
 
                         <button
                             onClick={handleChangePassword}
                             disabled={!currentPassword || !newPassword}
-                            className="w-full bg-[#4CAF50] hover:bg-green-600 transition-colors duration-300 text-white py-2 rounded-md font-medium mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-[#4CAF50] hover:bg-green-600 transition-colors duration-300 text-text py-2 rounded-md font-medium mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             {t('changePassword')}
                         </button>
@@ -110,7 +110,7 @@ const ProfilePage = () => {
 
                     <button
                         onClick={handleLogout}
-                        className="mt-4 w-full bg-red-600 hover:bg-red-700 transition-colors duration-300 text-white py-2 rounded-md font-medium"
+                        className="mt-4 w-full bg-red-600 hover:bg-red-700 transition-colors duration-300 text-text py-2 rounded-md font-medium"
                     >
                         {t('logout')}
                     </button>
@@ -120,21 +120,20 @@ const ProfilePage = () => {
                     <h2 className="text-lg font-medium">{t('favoriteTickers')}</h2>
 
                     {user.tickers.length === 0 ? (
-                        <p className="text-sm text-gray-400">{t('noFavorite')}</p>
+                        <p className="text-sm text-text opacity-45">{t('noFavorite')}</p>
                     ) : (
                         <ul className="flex flex-wrap gap-2">
                             {user.tickers.map((ticker) => (
                                 <li
                                     key={ticker}
-                                    className="flex items-center gap-1 bg-[#4CAF50] text-white px-3 py-1 rounded-full text-sm"
+                                    className="flex items-center gap-1 bg-[#4CAF50] text-text px-3 py-1 rounded-full text-sm"
                                 >
                                     {ticker}
                                     <button
                                         onClick={() => handleRemoveTicker(ticker)}
-                                        className="ml-1 text-white hover:text-gray-200"
-                                        title={t('delete')}
+                                        className="ml-1"
                                     >
-                                        <IconX className="w-4 h-4"/>
+                                        <IconX className="w-4 h-4 text-white"/>
                                     </button>
                                 </li>
                             ))}

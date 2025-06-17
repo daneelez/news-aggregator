@@ -14,7 +14,7 @@ const SettingsSection = ({label, value, onChange, children}: IProps) => {
             <select
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="bg-[#2C2D30] border border-[#555] rounded-md px-3 py-2 w-full text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+                className="bg-alt-light dark:bg-alt-dark border border-[#555] rounded-md px-3 py-2 w-full text-text focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
             >
                 {children}
             </select>

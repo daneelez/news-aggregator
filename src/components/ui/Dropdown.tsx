@@ -51,7 +51,7 @@ const Dropdown = () => {
                 onClick={() => setOpen(prev => !prev)}
                 className="border-none bg-transparent cursor-pointer focus:outline-none"
             >
-                <IconMenu className="w-8 h-8 text-white"/>
+                <IconMenu className="w-8 h-8 text-text"/>
             </button>
 
             <AnimatePresence>
@@ -62,44 +62,47 @@ const Dropdown = () => {
                         exit="exit"
                         variants={menuVariants}
                         transition={{duration: 0.15}}
-                        className="absolute top-full right-0 mt-2 min-w-[200px] rounded-2xl bg-[#2f2f32] shadow-xl overflow-hidden origin-top-right ring-1 ring-black/20"
+                        className="absolute top-full right-0 mt-2 min-w-[200px] rounded-2xl bg-bg-nd-light dark:bg-bg-nd-dark shadow-xl overflow-hidden origin-top-right ring-1 ring-black/20"
                     >
-                        <div className="flex flex-col text-[#E0E0E0] text-sm divide-y divide-[#444]">
-                            <DropDownItem to="/" onClick={close} icon={<IconHome className="w-5 h-5"/>}>
+                        <div className="flex flex-col text-text text-sm divide-y divide-[#444]">
+                            <DropDownItem to="/" onClick={close} icon={<IconHome className="w-5 h-5 text-text"/>}>
                                 {t('home')}
                             </DropDownItem>
 
                             {isAuthenticated && (
-                                <DropDownItem to="/profile" onClick={close} icon={<IconProfile className="w-5 h-5"/>}>
+                                <DropDownItem to="/profile" onClick={close}
+                                              icon={<IconProfile className="w-5 h-5 text-text"/>}>
                                     {t('profile')}
                                 </DropDownItem>
                             )}
 
-                            <DropDownItem to="/settings" onClick={close} icon={<IconSettings className="w-5 h-5"/>}>
+                            <DropDownItem to="/settings" onClick={close}
+                                          icon={<IconSettings className="w-5 h-5 text-text"/>}>
                                 {t('settings')}
                             </DropDownItem>
 
                             {!isAuthenticated && (
                                 <>
-                                    <DropDownItem to="/login" onClick={close} icon={<IconLogin className="w-5 h-5"/>}>
+                                    <DropDownItem to="/login" onClick={close}
+                                                  icon={<IconLogin className="w-5 h-5 text-text"/>}>
                                         {t('login')}
                                     </DropDownItem>
 
                                     <DropDownItem to="/register" onClick={close}
-                                                  icon={<IconRegister className="w-5 h-5"/>}>
+                                                  icon={<IconRegister className="w-5 h-5 text-text"/>}>
                                         {t('register')}
                                     </DropDownItem>
                                 </>
                             )}
 
                             {isAuthenticated && (
-                                <button
-                                    onClick={handleLogout}
-                                    className="flex items-center gap-3 px-4 py-3 hover:bg-[#444] transition-colors duration-200 text-left w-full"
-                                >
-                                    <IconLogout className="w-5 h-5"/>
+                                <DropDownItem to="/login" onClick={() => {
+                                    close();
+                                    handleLogout();
+                                }}
+                                              icon={<IconLogout className="w-5 h-5 text-text"/>}>
                                     {t('logout')}
-                                </button>
+                                </DropDownItem>
                             )}
                         </div>
                     </motion.div>

@@ -20,12 +20,12 @@ const SettingsPage = () => {
     }
 
     return (
-        <div className="min-h-screen flex-center bg-[#2C2D30] px-4">
+        <div className="h-screen flex-center bg-bg p-12 overflow-y-auto">
             <motion.div
                 initial={{opacity: 0, y: 20}}
                 animate={{opacity: 1, y: 0}}
                 transition={{duration: 0.4}}
-                className="w-md max-w-6xl bg-[#3A3B3E] rounded-2xl shadow-2xl p-6 text-white flex flex-col gap-6"
+                className="h-minimal:mt-auto w-md max-w-6xl bg-bg-nd-light dark:bg-bg-nd-dark rounded-2xl shadow-2xl p-6 h-mobile:gap-2 text-text h-mobile:p-4 flex flex-col gap-6"
             >
                 <h1 className="text-center text-3xl font-bold">{t('settings')}</h1>
 

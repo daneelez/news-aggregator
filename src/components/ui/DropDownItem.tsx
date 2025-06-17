@@ -17,7 +17,7 @@ const DropDownItem = ({to, onClick, icon, children}: IProps) => {
             to={to}
             onClick={onClick}
             className={`flex items-center gap-3 px-4 py-3 transition-colors duration-200 ${
-                isActive ? 'bg-[#555]' : 'hover:bg-[#444]'
+                isActive ? 'bg-active-light dark:bg-active-dark' : 'hover:bg-hover-light dark:hover:bg-hover-dark'
             }`}
         >
             {icon}

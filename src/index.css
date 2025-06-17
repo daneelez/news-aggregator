@@ -5,8 +5,12 @@
 @custom-variant h-md (@media (max-height: 860px) and (min-height: 640px));
 @custom-variant h-lg (@media (max-height: 1024px) and (min-height: 860px));
 @custom-variant h-xl (@media (min-height: 1024px));
-@custom-variant h-mobile (@media (max-height: 400px));
+@custom-variant h-mobile (@media (max-height: 600px));
 @custom-variant h-desktop (@media (min-height: 600px));
+@custom-variant h-minimal (@media (max-height: 360px));
+@custom-variant w-mobile (@media (max-width: 420px));
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
     font-family: Martin Mono;
@@ -23,10 +27,25 @@
     --color-secondary-900: #713F12;
 
     --font-martin: Martin Mono, "sans-serif";
-    --color-bg: #f1f1f1;
-    --color-fg: rgba(216, 220, 220, 1);
-    --sky-top: #87ceeb;
-    --sky-bottom: #ffffff;
+
+    --color-alt-light: #ffffff;
+    --color-bg-nd-light: #fffff7;
+    --color-alt-dark: #2C2D30;
+    --color-bg-nd-dark: #3A3B3E;
+    --color-hover-light: #f0f0f0;
+    --color-hover-dark: #44484d;
+    --color-active-light: #e0e0e0;
+    --color-active-dark: #3b3f45;
+}
+
+:root {
+    --color-bg: #ffffff;
+    --color-text: black;
+}
+
+.dark {
+    --color-bg: #2C2D30;
+    --color-text: #ffffff;
 }
 
 @layer base {
@@ -40,14 +59,13 @@
         -webkit-tap-highlight-color: transparent;
         font-family: var(--font-martin), sans-serif;
         scrollbar-width: thin;
-        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        scrollbar-color: var(--color-text) transparent;
     }
 
-    html, body, #root {
-        color: var(--color-fg);
+    :root, html, body, #root {
+        background-color: var(--color-bg);
+        color: var(--color-text);
         overflow: hidden;
-
-        background-color: #212024;
         height: 100%;
         transition: background 0.3s ease;
     }
