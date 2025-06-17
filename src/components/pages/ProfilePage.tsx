@@ -7,6 +7,7 @@ import IconX from '../icons/IconX'
 import {useTranslation} from 'react-i18next'
 import TickerDropdown from '../ui/TickerDropdown'
 import Dropdown from "../ui/Dropdown.tsx";
+import type {ITicker} from "../../constants/interfaces.ts";
 
 const ProfilePage = () => {
     const {user, logout, isAuthenticated} = useAuthStore()
@@ -41,25 +42,25 @@ const ProfilePage = () => {
         }
     };
 
-    const handleAddTicker = (tickerName: string) => {
+    const handleAddTicker = (ticker: ITicker) => {
         useAuthStore.setState((state) => ({
             user: {
                 ...state.user!,
-                tickers: [...state.user!.tickers, tickerName],
+                tickers: [...state.user!.tickers, ticker],
             },
         }))
     }
 
-    const handleRemoveTicker = (tickerToRemove: string) => {
+    const handleRemoveTicker = (ticker: ITicker) => {
         useAuthStore.setState((state) => ({
             user: {
                 ...state.user!,
-                tickers: state.user!.tickers.filter((t) => t !== tickerToRemove),
+                tickers: state.user!.tickers.filter((t) => t.name !== ticker.name),
             },
         }))
     }
 
-    const availableTickers = tickers.filter((t) => !user.tickers.includes(t.name))
+    const availableTickers = tickers.filter((t) => !user.tickers.map(item => item.name).includes(t.name))
 
     return (
         <div className="h-screen bg-bg flex-center p-12 overflow-y-auto">
@@ -125,10 +126,10 @@ const ProfilePage = () => {
                         <ul className="flex flex-wrap gap-2">
                             {user.tickers.map((ticker) => (
                                 <li
-                                    key={ticker}
+                                    key={ticker.name}
                                     className="flex items-center gap-1 bg-[#4CAF50] text-text px-3 py-1 rounded-full text-sm"
                                 >
-                                    {ticker}
+                                    {ticker.name}
                                     <button
                                         onClick={() => handleRemoveTicker(ticker)}
                                         className="ml-1"
@@ -142,7 +143,7 @@ const ProfilePage = () => {
 
                     <TickerDropdown
                         tickers={availableTickers}
-                        onSelect={(ticker) => handleAddTicker(ticker.name)}
+                        onSelect={(ticker) => handleAddTicker(ticker)}
                     />
                 </div>
             </motion.div>

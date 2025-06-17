@@ -7,9 +7,11 @@ import {
     type LineData,
     type UTCTimestamp,
 } from 'lightweight-charts';
+import {useTranslation} from "react-i18next";
+import IconGraph from "../icons/IconGraph.tsx";
 
 interface LightweightChartProps {
-    symbol: string;
+    symbol: string | null;
 }
 
 const mockData: LineData<UTCTimestamp>[] = [
@@ -23,6 +25,8 @@ const mockData: LineData<UTCTimestamp>[] = [
 ];
 
 const LightweightChart = ({symbol}: LightweightChartProps) => {
+    const {t} = useTranslation('translations')
+
     const chartContainerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<IChartApi | null>(null);
     const lineSeriesRef = useRef<ISeriesApi<'Line'> | null>(null);
@@ -39,7 +43,7 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
 
         const chart = createChart(container, {
             width: container.clientWidth,
-            height: 500,
+            height: 300,
             layout: {
                 background: {color: '#0a0a0a'},
                 textColor: '#d1d4dc',
@@ -88,8 +92,14 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
     }, [symbol]);
 
     return (
-        <div className="flex flex-col w-full p-4 bg-neutral-900 rounded-lg shadow-lg">
-            <div ref={chartContainerRef} className="w-full h-[500px]"/>
+        <div className="flex flex-col w-[80%] rounded-lg">
+            <div className="flex items-center mb-4 py-8 gap-4">
+                <IconGraph className='w-12 h-12 text-text'/>
+                <h2 className="text-4xl font-bold">
+                    {t('tickerChart')}
+                </h2>
+            </div>
+            <div ref={chartContainerRef} className="w-full h-full mb-6"/>
         </div>
     );
 };

@@ -4,7 +4,7 @@ import Dropdown from "../ui/Dropdown.tsx";
 
 const MainPage = () => {
     return (
-        <div className="flex h-screen bg-neutral-900 text-white">
+        <div className="flex flex-row w-md:flex-col h-screen text-text">
             <ChartSection/>
             <NewsSection/>
             <Dropdown/>

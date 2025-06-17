@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react'
 import {type ITicker} from '../../constants/interfaces.ts'
-import TickerItem from './TickerItem'
 import {useTranslation} from "react-i18next";
+import DropTickerItem from "./DropTickerItem.tsx";
 
 interface IProps {
     tickers: ITicker[]
@@ -50,7 +50,7 @@ const TickerDropdown = ({tickers, onSelect}: IProps) => {
                 >
                     {filtered.length > 0 ? (
                         filtered.map((ticker) => (
-                            <TickerItem
+                            <DropTickerItem
                                 key={ticker.name}
                                 ticker={ticker}
                                 onClick={() => {
