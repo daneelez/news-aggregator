@@ -17,10 +17,6 @@
     src: url("public/fonts/MartianMono-Regular.ttf");
 }
 
-.dark {
-    --background:
-
-}
 
 @theme {
     --color-primary-50: #EBF5FF;

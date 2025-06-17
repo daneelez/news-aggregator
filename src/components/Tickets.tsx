@@ -14,7 +14,6 @@ const Tickets = () => {
 
   return (
     <div className="min-h-full text-white px-6 py-10">
-      {/* Избранные тикеты */}
       <div className="mb-10">
         <h2 className="text-3xl font-bold mb-4">⭐ Избранные тикеры</h2>
         <div className="flex flex-wrap gap-3">
@@ -34,7 +33,6 @@ const Tickets = () => {
         </div>
       </div>
 
-      {/* Все тикеты */}
       <div>
         <h2 className="text-3xl font-bold mb-4">📈 Все тикеры</h2>
         <div className="flex flex-wrap gap-3">

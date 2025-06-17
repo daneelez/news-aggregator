@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from "react"
 import {fetchNewsByTicker} from "../../services/newsService"
 import type {IArticle} from "../../constants/interfaces.ts";
 import {useTranslation} from "react-i18next";
+import FilterSection from './FilterSection.tsx'
 
 const NewsSection = () => {
     const {selectedTicker} = useTickerStore()
@@ -46,6 +47,7 @@ const NewsSection = () => {
                 <h2 className="text-4xl font-bold text-white">{t('news')}</h2>
                 <div className="cursor-pointer text-white"></div>
             </div>
+            <FilterSection/>
 
             {news.map((n, i) => (
                 <div key={i} className="bg-black/40 p-3 mb-2 rounded-md text-white">
@@ -54,7 +56,6 @@ const NewsSection = () => {
                     <a className="text-green-400" href={n.url} target="_blank">{t("read")} →</a>
                 </div>
             ))}
-
             <div ref={loader} className="h-10"/>
         </div>
     )
