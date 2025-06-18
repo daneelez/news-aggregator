@@ -23,7 +23,6 @@ function formatTime(timestamp: UTCTimestamp): string {
     return `${day}.${month}`;
 }
 
-// Function to convert ISO string to Unix timestamp in seconds
 const isoToUnixTimestamp = (isoString: string): UTCTimestamp => {
     return Math.floor(new Date(isoString).getTime() / 1000) as UTCTimestamp;
 };
@@ -47,8 +46,7 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
 
             try {
                 const response = await axios.get(`http://localhost:8000/price/${symbol}`);
-                // Transform the ISO date strings to Unix timestamps
-                const transformedData = response.data.map((item: {time: string, value: number}) => ({
+                const transformedData = response.data.map((item: { time: string, value: number }) => ({
                     time: isoToUnixTimestamp(item.time),
                     value: item.value
                 }));
@@ -78,6 +76,9 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
         const chart = createChart(container, {
             width: container.clientWidth,
             height: 350,
+            localization: {
+                priceFormatter: (price: number) => `$${price.toFixed(2)}`
+            },
             layout: {
                 background: {color: '#212024'},
                 textColor: '#d1d4dc',
@@ -92,8 +93,6 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
                     top: 0.1,
                     bottom: 0.1,
                 },
-                priceFormatter: price => `$${price.toFixed(2)}`,
-                paddingLeft: 10,
             },
             grid: {
                 vertLines: {color: '#2B2B43'},
@@ -115,11 +114,9 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
             priceLineVisible: true,
             lastValueVisible: true,
             priceLineColor: 'rgba(97, 93, 250, 0.6)',
-            lastValueTextColor: '#615dfa',
         });
         lineSeriesRef.current = lineSeries;
 
-        // Apply filtered data when it's available
         const filteredData = chartData.slice(-daysRange);
         if (filteredData.length > 0) {
             lineSeries.setData(filteredData);
