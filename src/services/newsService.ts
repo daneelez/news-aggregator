@@ -1,9 +1,16 @@
 import type {INews} from '../constants/interfaces.ts';
-import axios from "axios";
+import axios from 'axios';
 
-export async function fetchAllNews(
-    selectedTicker: string | null,
-): Promise<INews[]> {
-    const res = await axios.get('http://localhost:8000/get_all_news', { 'ticker': selectedTicker });
-    return res.data as INews[];
+const API_URL = 'http://localhost:8000';
+
+export async function fetchNews(ticker?: string, skip = 0, limit = 100): Promise<INews[]> {
+    if (ticker) {
+        const res = await axios.get(`${API_URL}/get_all_news/${ticker}`, {
+            params: {skip, limit}
+        });
+        return res.data as INews[];
+    } else {
+        const res = await axios.get(`${API_URL}/get_all_news`);
+        return res.data as INews[];
+    }
 }
