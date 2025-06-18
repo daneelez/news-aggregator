@@ -1,37 +1,30 @@
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
     createChart,
     type IChartApi,
     type ISeriesApi,
     LineSeries,
+    type UTCTimestamp,
     type LineData,
-    type UTCTimestamp
 } from 'lightweight-charts';
-import {useTranslation} from 'react-i18next';
-import IconGraph from '../icons/IconGraph.tsx';
-import TimeRangeSelector from './TimeRangeSelector.tsx';
-import {useFilterStore} from '../../store/filterStore.ts';
+import {useTranslation} from "react-i18next";
+import IconGraph from "../icons/IconGraph.tsx";
+import TimeRangeSelector from "./TimeRangeSelector.tsx";
+import axios from "axios";
 
 interface LightweightChartProps {
     symbol: string | null;
 }
 
-const now = Math.floor(Date.now() / 1000);
-const oneDay = 86400;
+function formatTime(timestamp: UTCTimestamp): string {
+    const date = new Date(timestamp * 1000);
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    return `${day}.${month}`;
+}
 
-const mockData: LineData<UTCTimestamp>[] = Array.from({length: 30}, (_, i) => {
-    const time = (now - (29 - i) * oneDay) as UTCTimestamp;
-    const value = 150 + Math.sin(i / 5) * 10 + Math.random() * 5;
-    return {time, value};
-});
-
-const timeRangeToDays: Record<string, number> = {
-    '1w': 7,
-    '1m': 30,
-    '3m': 90,
-    '6m': 180,
-    '1y': 365,
-    'all': Infinity
+const isoToUnixTimestamp = (isoString: string): UTCTimestamp => {
+    return Math.floor(new Date(isoString).getTime() / 1000) as UTCTimestamp;
 };
 
 const LightweightChart = ({symbol}: LightweightChartProps) => {
@@ -39,17 +32,37 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
     const chartContainerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<IChartApi | null>(null);
     const lineSeriesRef = useRef<ISeriesApi<'Line'> | null>(null);
+    const [daysRange] = useState<number>(7);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [chartData, setChartData] = useState<LineData<UTCTimestamp>[]>([]);
 
-    const {timeRange} = useFilterStore();
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!symbol) return;
 
-    const filteredData = (() => {
-        if (timeRange === 'all') return mockData;
+            setLoading(true);
+            setError(null);
 
-        const now = Math.floor(Date.now() / 1000);
-        const days = timeRangeToDays[timeRange];
-        const cutoff = now - days * 86400;
-        return mockData.filter(point => point.time >= cutoff);
-    })();
+            try {
+                const response = await axios.get(`http://localhost:8000/price/${symbol}`);
+
+                const transformedData = response.data.map((item: { time: string, value: number }) => ({
+                    time: isoToUnixTimestamp(item.time),
+                    value: item.value
+                }));
+
+                setChartData(transformedData);
+            } catch (err) {
+                console.error("Error fetching chart data:", err);
+                setError(t('chartDataError'));
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [symbol, t]);
 
     useEffect(() => {
         const container = chartContainerRef.current;
@@ -63,10 +76,21 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
 
         const chart = createChart(container, {
             width: container.clientWidth,
-            height: 300,
+            height: 350,
             layout: {
-                background: {color: '#0a0a0a'},
+                background: {color: '#212024'},
                 textColor: '#d1d4dc',
+                fontFamily: "'Roboto', sans-serif",
+                fontSize: 14,
+            },
+            rightPriceScale: {
+                visible: true,
+                borderVisible: true,
+                autoScale: true,
+                scaleMargins: {
+                    top: 0.1,
+                    bottom: 0.1,
+                },
             },
             grid: {
                 vertLines: {color: '#2B2B43'},
@@ -75,23 +99,26 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
             crosshair: {
                 mode: 1,
             },
-            rightPriceScale: {
-                borderColor: '#71649C',
-            },
             timeScale: {
-                borderColor: '#71649C',
+                tickMarkFormatter: formatTime,
             },
-        });
-
-        const lineSeries = chart.addSeries(LineSeries, {
-            color: '#2962FF',
-            lineWidth: 2,
         });
 
         chartRef.current = chart;
+
+        const lineSeries = chart.addSeries(LineSeries, {
+            color: 'rgba(97, 93, 250, 0.85)',
+            lineWidth: 4,
+            priceLineVisible: true,
+            lastValueVisible: true,
+            priceLineColor: 'rgba(97, 93, 250, 0.6)',
+        });
         lineSeriesRef.current = lineSeries;
 
-        lineSeries.setData(filteredData);
+        const filteredData = chartData.slice(-daysRange);
+        if (filteredData.length > 0) {
+            lineSeries.setData(filteredData);
+        }
 
         const handleResize = () => {
             if (chartRef.current && chartContainerRef.current) {
@@ -109,20 +136,23 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
                 lineSeriesRef.current = null;
             }
         };
-    }, [symbol, timeRange]);
+    }, [symbol, daysRange, chartData]);
 
     return (
-        <div className="flex flex-col w-[80%] rounded-lg">
+        <div className="flex flex-col w-full max-w-[1200px] rounded-lg mx-auto">
             <div className="flex items-center mb-4 py-8 gap-4">
-                <IconGraph className="w-12 h-12 text-text"/>
+                <IconGraph className='w-12 h-12 text-text'/>
                 <h2 className="text-4xl font-bold">
                     {t('tickerChart')}
                 </h2>
             </div>
-
             <TimeRangeSelector/>
-
-            <div ref={chartContainerRef} className="w-full h-full mb-6"/>
+            <div
+                ref={chartContainerRef}
+                className="w-full h-[350px] mb-6 rounded-lg shadow-lg bg-[#121212] transition-all duration-500"
+            />
+            {loading && <div className="text-center py-4">{t('loading')}</div>}
+            {error && <div className="text-center text-red-500 py-4">{error}</div>}
         </div>
     );
 };

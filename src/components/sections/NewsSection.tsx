@@ -5,7 +5,7 @@ import {useFilterStore} from "../../store/filterStore.ts";
 import {parseDomain} from "../../utils/parseDomain.ts";
 import {useTickerStore} from "../../store/tickerStore.ts";
 import {useCallback, useEffect, useRef} from "react";
-import {fetchAllNews} from "../../services/newsService.ts";
+import {fetchNews} from "../../services/newsService.ts";
 import {useNewsStore} from "../../store/newsStore.ts";
 import {isInTimeRange} from "../../utils/isInTimeRange.ts";
 
@@ -31,7 +31,7 @@ const NewsSection = () => {
         async function load() {
             try {
                 setLoading(true);
-                const allNews = await fetchAllNews();
+                const allNews = await fetchNews(selectedTicker ?? undefined);
                 setNews(allNews);
                 setError(null);
             } catch (e) {
