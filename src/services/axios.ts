@@ -2,7 +2,7 @@ import axios from 'axios'
 import {useAuthStore} from '../store/authStore'
 
 const api = axios.create({
-    baseURL: 'https://localhost:8080',
+    baseURL: 'http://localhost:8000',
     withCredentials: true,
 })
 

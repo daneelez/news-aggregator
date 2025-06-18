@@ -3,7 +3,7 @@ import {useFilterStore} from "../store/filterStore.ts";
 export const isInTimeRange = (dateStr: string): boolean => {
     const timeRange = useFilterStore.getState().timeRange;
 
-    if (timeRange === 'all') return true;
+    if (!timeRange || timeRange === 'all') return true;
 
     const now = new Date();
     const newsDate = new Date(dateStr);
