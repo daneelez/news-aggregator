@@ -23,6 +23,8 @@ function formatTime(timestamp: UTCTimestamp): string {
     return `${day}.${month}`;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const isoToUnixTimestamp = (isoString: string): UTCTimestamp => {
     return Math.floor(new Date(isoString).getTime() / 1000) as UTCTimestamp;
 };
@@ -45,7 +47,7 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
             setError(null);
 
             try {
-                const response = await axios.get(`http://localhost:8000/price/${symbol}`);
+                const response = await axios.get(`${API_URL}/price/${symbol}`);
                 const transformedData = response.data.map((item: { time: string, value: number }) => ({
                     time: isoToUnixTimestamp(item.time),
                     value: item.value

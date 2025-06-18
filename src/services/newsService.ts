@@ -1,7 +1,7 @@
 import type {INews} from '../constants/interfaces.ts';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function fetchNews(ticker?: string, skip = 0, limit = 100): Promise<INews[]> {
     if (ticker) {
