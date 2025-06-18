@@ -31,7 +31,7 @@ const NewsSection = () => {
         async function load() {
             try {
                 setLoading(true);
-                const allNews = await fetchAllNews();
+                const allNews = await fetchAllNews(selectedTicker);
                 setNews(allNews);
                 setError(null);
             } catch (e) {

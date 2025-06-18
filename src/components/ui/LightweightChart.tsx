@@ -4,27 +4,17 @@ import {
     type IChartApi,
     type ISeriesApi,
     LineSeries,
-    type LineData,
     type UTCTimestamp,
+    type LineData,
 } from 'lightweight-charts';
 import {useTranslation} from "react-i18next";
 import IconGraph from "../icons/IconGraph.tsx";
 import TimeRangeSelector from "./TimeRangeSelector.tsx";
+import axios from "axios";
 
 interface LightweightChartProps {
     symbol: string | null;
 }
-
-const mockData: LineData<UTCTimestamp>[] = [
-    {time: 1718006400 as UTCTimestamp, value: 155.23},
-    {time: 1718092800 as UTCTimestamp, value: 157.42},
-    {time: 1718179200 as UTCTimestamp, value: 154.18},
-    {time: 1718265600 as UTCTimestamp, value: 158.75},
-    {time: 1718352000 as UTCTimestamp, value: 160.10},
-    {time: 1718438400 as UTCTimestamp, value: 159.22},
-    {time: 1718524800 as UTCTimestamp, value: 162.88},
-];
-
 
 function formatTime(timestamp: UTCTimestamp): string {
     const date = new Date(timestamp * 1000);
@@ -33,14 +23,47 @@ function formatTime(timestamp: UTCTimestamp): string {
     return `${day}.${month}`;
 }
 
+// Function to convert ISO string to Unix timestamp in seconds
+const isoToUnixTimestamp = (isoString: string): UTCTimestamp => {
+    return Math.floor(new Date(isoString).getTime() / 1000) as UTCTimestamp;
+};
+
 const LightweightChart = ({symbol}: LightweightChartProps) => {
     const {t} = useTranslation('translations');
     const chartContainerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<IChartApi | null>(null);
     const lineSeriesRef = useRef<ISeriesApi<'Line'> | null>(null);
     const [daysRange] = useState<number>(7);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [chartData, setChartData] = useState<LineData<UTCTimestamp>[]>([]);
 
-    const filteredData = mockData.slice(-daysRange);
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!symbol) return;
+
+            setLoading(true);
+            setError(null);
+
+            try {
+                const response = await axios.get(`http://localhost:8000/price/${symbol}`);
+                // Transform the ISO date strings to Unix timestamps
+                const transformedData = response.data.map((item: {time: string, value: number}) => ({
+                    time: isoToUnixTimestamp(item.time),
+                    value: item.value
+                }));
+
+                setChartData(transformedData);
+            } catch (err) {
+                console.error("Error fetching chart data:", err);
+                setError(t('chartDataError'));
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [symbol, t]);
 
     useEffect(() => {
         const container = chartContainerRef.current;
@@ -62,7 +85,6 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
                 fontSize: 14,
             },
             rightPriceScale: {
-
                 visible: true,
                 borderVisible: true,
                 autoScale: true,
@@ -70,9 +92,7 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
                     top: 0.1,
                     bottom: 0.1,
                 },
-                // Отступ слева и форматирование цен с $
                 priceFormatter: price => `$${price.toFixed(2)}`,
-                // Добавим padding слева через options (padding в px)
                 paddingLeft: 10,
             },
             grid: {
@@ -83,7 +103,6 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
                 mode: 1,
             },
             timeScale: {
-
                 tickMarkFormatter: formatTime,
             },
         });
@@ -100,7 +119,11 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
         });
         lineSeriesRef.current = lineSeries;
 
-        lineSeries.setData(filteredData);
+        // Apply filtered data when it's available
+        const filteredData = chartData.slice(-daysRange);
+        if (filteredData.length > 0) {
+            lineSeries.setData(filteredData);
+        }
 
         const handleResize = () => {
             if (chartRef.current && chartContainerRef.current) {
@@ -118,7 +141,7 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
                 lineSeriesRef.current = null;
             }
         };
-    }, [symbol, daysRange]);
+    }, [symbol, daysRange, chartData]);
 
     return (
         <div className="flex flex-col w-full max-w-[1200px] rounded-lg mx-auto">
@@ -130,9 +153,11 @@ const LightweightChart = ({symbol}: LightweightChartProps) => {
             </div>
             <TimeRangeSelector/>
             <div
-              ref={chartContainerRef}
-              className="w-full h-[350px] mb-6 rounded-lg shadow-lg bg-[#121212] transition-all duration-500"
+                ref={chartContainerRef}
+                className="w-full h-[350px] mb-6 rounded-lg shadow-lg bg-[#121212] transition-all duration-500"
             />
+            {loading && <div className="text-center py-4">{t('loading')}</div>}
+            {error && <div className="text-center text-red-500 py-4">{error}</div>}
         </div>
     );
 };
