@@ -6,7 +6,7 @@ import {motion} from 'framer-motion'
 import Dropdown from "../ui/Dropdown.tsx";
 import {useTranslation} from "react-i18next";
 
-const RECAPTCHA_SITE_KEY = '6Ld8g2IrAAAAAGWH_2KnqY6d4hBOuXHdy_OWB6ih'
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const RegisterPage = () => {
     const [loginName, setLoginName] = useState('')
